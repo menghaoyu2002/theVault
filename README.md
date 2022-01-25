@@ -1,5 +1,5 @@
 # The Vault
-An NFT storing service. 
+An NFT storing service. Maybe an NFT Musuem.
 
 Give me your NFTs and I'll shred them for you.
 Lock them up and never see them again.
