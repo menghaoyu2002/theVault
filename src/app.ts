@@ -1,13 +1,22 @@
 import express from 'express';
-import * as dotenv from 'dotenv';
+import cors = require('cors');
+import dotenv from 'dotenv';
+import mongoose = require('mongoose');
 
-const app = express();
+// configure environment variables
 dotenv.config();
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Vault');
-});
+const app = express();
 
-app.listen(process.env.PORT || 8080, () => {
+app.use(cors());
+
+// setup mongodb database
+mongoose
+    .connect(process.env.MONGO_URI!)
+    .then(() => console.log('connected to mongodb'))
+    .catch((err) => console.log(err));
+
+// listen on port
+app.listen(process.env.PORT, () => {
     console.log(`Listening on port ${process.env.PORT}`);
 });
