@@ -1,4 +1,4 @@
-import { Schema, model, DateSchemaDefinition, Date } from 'mongoose';
+import { Schema, model, Date } from 'mongoose';
 import { User } from './User';
 
 export interface Image {
@@ -12,7 +12,7 @@ export interface Image {
     dislikes: number;
 }
 
-const imageSchema = new Schema<Image>({
+export const ImageSchema = new Schema<Image>({
     source: { type: String, required: true },
     title: { type: String, required: true },
     description: String,
@@ -23,5 +23,6 @@ const imageSchema = new Schema<Image>({
     dislikes: { type: Number, default: 0 },
 });
 
-const imageModel = model<Image>('Image', imageSchema);
-export default imageModel;
+const ImageModel = model<Image>('Image', ImageSchema);
+
+export default ImageModel;

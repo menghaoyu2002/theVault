@@ -2,8 +2,6 @@ import express from 'express';
 import cors = require('cors');
 import dotenv from 'dotenv';
 import mongoose = require('mongoose');
-import imageModel from './models/Image';
-import { User } from './models/User';
 
 // configure environment variables
 dotenv.config();
