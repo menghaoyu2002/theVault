@@ -1,18 +1,18 @@
 import { Schema, model, Date } from 'mongoose';
-import { User } from './User';
+import { IUser } from './User';
 
-export interface Image {
+export interface IImage {
     source: string;
     title: string;
     description: string;
-    author: User;
+    author: IUser;
     uploadDate: Date;
     viewCount: number;
     likes: number;
     dislikes: number;
 }
 
-export const ImageSchema = new Schema<Image>({
+export const ImageSchema = new Schema<IImage>({
     source: { type: String, required: true },
     title: { type: String, required: true },
     description: String,
@@ -23,6 +23,6 @@ export const ImageSchema = new Schema<Image>({
     dislikes: { type: Number, default: 0 },
 });
 
-const ImageModel = model<Image>('Image', ImageSchema);
+const Image = model<IImage>('Image', ImageSchema);
 
-export default ImageModel;
+export default Image;
