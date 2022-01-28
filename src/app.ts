@@ -27,7 +27,9 @@ app.use('/', userRouter);
 
 // standard error handler
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-    res.status(500);
+    if (!res.statusCode) {
+        res.status(500);
+    }
     res.json({ type: err.name, message: err.message });
 });
 
