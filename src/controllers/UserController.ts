@@ -25,4 +25,5 @@ export async function createNewUser(req: Request, res: Response) {
         username: username,
     });
     await newUser.save();
+    return res.status(200).json({ message: 'Success' });
 }

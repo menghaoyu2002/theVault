@@ -4,6 +4,9 @@ import cors = require('cors');
 import dotenv from 'dotenv';
 import mongoose = require('mongoose');
 
+// routers
+import userRouter from './routes/userRouter';
+
 // configure environment variables
 dotenv.config();
 
@@ -20,9 +23,11 @@ mongoose
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
 
-// error handler
+app.use('/', userRouter);
+
+// standard error handler
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-    res.status(err.status || 500);
+    res.status(500);
     res.json({ type: err.name, message: err.message });
 });
 

@@ -7,4 +7,4 @@ router.post('/signup', UserController.createNewUser);
 
 router.post('/login');
 
-module.exports = router;
+export default router;
