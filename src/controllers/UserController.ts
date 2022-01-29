@@ -1,7 +1,7 @@
 import User from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 // Create A New User and store it in the database
 export async function createNewUser(
@@ -50,19 +50,19 @@ export async function login(req: Request, res: Response, next: NextFunction) {
                 .json({ message: 'No User with this email was found' });
         }
 
-        const isAuthenticated = bcrypt.compare(
+        const isCorrectPassword = bcrypt.compare(
             req.body.password,
             user.password
         );
-        if (!isAuthenticated) {
+        if (!isCorrectPassword) {
             return res.status(401).json({ message: 'Incorrect Password' });
         }
-        const token = await jsonwebtoken.sign(
+        const token = await jwt.sign(
             { id: user._id.toString() },
             process.env.TOKEN_SECRET!,
             { expiresIn: '24h' }
         );
-        return res.status(200).json({ token: token });
+        return res.status(200).json({ token });
     } catch (err) {
         next(err);
     }
