@@ -1,6 +1,7 @@
 import User from '../models/User';
 import { Request, Response, NextFunction } from 'express';
-import { Error } from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken';
 
 // Create A New User and store it in the database
 export async function createNewUser(
@@ -36,6 +37,33 @@ export async function createNewUser(
         if (err.name === 'ValidationError') {
             return res.status(400).json(err.errors);
         }
+        next(err);
+    }
+}
+
+export async function login(req: Request, res: Response, next: NextFunction) {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            return res
+                .status(404)
+                .json({ message: 'No User with this email was found' });
+        }
+
+        const isAuthenticated = bcrypt.compare(
+            req.body.password,
+            user.password
+        );
+        if (!isAuthenticated) {
+            return res.status(401).json({ message: 'Incorrect Password' });
+        }
+        const token = await jsonwebtoken.sign(
+            { id: user._id.toString() },
+            process.env.TOKEN_SECRET!,
+            { expiresIn: '24h' }
+        );
+        return res.status(200).json({ token: token });
+    } catch (err) {
         next(err);
     }
 }

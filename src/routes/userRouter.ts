@@ -4,6 +4,6 @@ const router = Router();
 // Sign the user up with their given credentials
 router.post('/signup', UserController.createNewUser);
 
-router.post('/login');
+router.post('/login', UserController.login);
 
 export default router;
