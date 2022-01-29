@@ -3,9 +3,9 @@ import { IImage, ImageSchema } from './Image';
 import bcrypt from 'bcryptjs';
 
 export interface IUser {
-    email: { type: string; required: true; unique: true };
-    password: { type: string; required: true; min: 6 };
-    username: { type: string; required: true; unique: true; min: 2; max: 32 };
+    email: string;
+    password: string;
+    username: string;
     uploadedImages: IImage[];
     comparePasswords(candidatePassword: string): Promise<Boolean>;
 }
@@ -22,17 +22,6 @@ UserSchema.pre('save', async function () {
         this.password = await bcrypt.hash(this.password, 10);
     }
 });
-
-/**
- * Compare the candidate password to the actual hashed password
- * @param candidatePassword the password to compare
- * @return true if the password match and false otherwise
- */
-UserSchema.methods.comparePasswords = async function (
-    candidatePassword: string
-): Promise<Boolean> {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
 
 const User = model<IUser>('User', UserSchema);
 export default User;
