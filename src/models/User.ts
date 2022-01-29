@@ -7,7 +7,6 @@ export interface IUser {
     password: string;
     username: string;
     uploadedImages: IImage[];
-    comparePasswords(candidatePassword: string): Promise<Boolean>;
 }
 
 const UserSchema = new Schema<IUser>({

@@ -1,11 +1,13 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import cors = require('cors');
+import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import cloudinary from 'cloudinary';
 
 // routers
 import userRouter from './routes/userRouter';
+import imageRouter from './routes/imageRouter';
 
 // configure environment variables
 dotenv.config();
@@ -23,7 +25,9 @@ mongoose
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
 
-app.use('/', userRouter);
+// API routes
+app.use('/api/', userRouter);
+app.use('/api/images', imageRouter);
 
 // standard error handler
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
