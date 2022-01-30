@@ -2,6 +2,7 @@ import User from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 
 // Create A New User and store it in the database
 export async function createNewUser(
@@ -10,6 +11,11 @@ export async function createNewUser(
     next: NextFunction
 ) {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const { email, password, username } = req.body;
 
         // check if a user with this email or username already exists
@@ -32,11 +38,8 @@ export async function createNewUser(
             username: username,
         });
         await newUser.save();
-        return res.status(200).json({ message: 'Success' });
+        return res.sendStatus(201);
     } catch (err: any) {
-        if (err.name === 'ValidationError') {
-            return res.status(400).json(err.errors);
-        }
         next(err);
     }
 }
@@ -46,8 +49,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
             return res
-                .status(404)
-                .json({ message: 'No User with this email was found' });
+                .status(401)
+                .json({ message: 'Invalid Email or Password' });
         }
 
         const isCorrectPassword = bcrypt.compare(
@@ -55,7 +58,9 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             user.password
         );
         if (!isCorrectPassword) {
-            return res.status(401).json({ message: 'Incorrect Password' });
+            return res
+                .status(401)
+                .json({ message: 'Invalid Email or Password' });
         }
         const token = await jwt.sign(
             { id: user._id.toString() },

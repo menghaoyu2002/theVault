@@ -1,17 +1,34 @@
-import { Router } from 'express';
-import * as authentication from '../middleware/authentication';
+import express from 'express';
+import { authenticateToken } from '../middleware/authentication';
+import { authorizeImageAuthor } from '../middleware/authorization';
 import * as imageController from '../controllers/ImageController';
+import * as imageErrorHandler from '../middleware/imageErrorHandler';
+import { upload } from '../config/multer';
+import { body } from 'express-validator';
+import path from 'path';
 
-const router = Router();
+const router = express.Router();
 
-// get all uploaded images
-router.get('/');
+// serve static images
+router.use('/', express.static(path.join(__dirname, '../public/images')));
 
-// get the uploaded image with the id imageID
-router.get('/:imageID');
+// upload an image from the current User
+router.post(
+    '/upload',
+    authenticateToken,
+    body('title').isLength({ min: 1, max: 32 }),
+    body('description').isLength({ max: 300 }),
+    upload.single('image'),
+    imageErrorHandler.handleMulterErrors,
+    imageController.uploadImage
+);
 
-router.post('/upload', authentication.authenticateToken);
-
-router.delete('/delete/:imageID', authentication.authenticateToken);
+// delete the specified image if the current User has permission to do so
+router.delete(
+    '/delete/:imageID',
+    authenticateToken,
+    authorizeImageAuthor,
+    imageController.deleteImage
+);
 
 export default router;

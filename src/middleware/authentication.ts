@@ -1,18 +1,31 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import User from '../models/User';
 
-export function authenticateToken(
+export async function authenticateToken(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    const token =
-        req.headers.authorization && req.headers.authorization.split(' ')[1];
-    if (!token) return res.sendStatus(401);
+    try {
+        const token =
+            req.headers.authorization &&
+            req.headers.authorization.split(' ')[1];
+        if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, process.env.TOKEN_SECRET!, (err, userID) => {
-        if (err) return res.sendStatus(403);
-        req.body.userID = userID;
+        const { id } = jwt.verify(
+            token,
+            process.env.TOKEN_SECRET!
+        ) as JwtPayload;
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.sendStatus(403);
+        }
+        console.log(user);
+        req.body.user = user;
         next();
-    });
+    } catch (err) {
+        return res.sendStatus(403);
+    }
 }

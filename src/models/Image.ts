@@ -14,8 +14,8 @@ export interface IImage {
 
 export const ImageSchema = new Schema<IImage>({
     source: { type: String, required: true },
-    title: { type: String, required: true },
-    description: String,
+    title: { type: String, required: true, max: 32 },
+    description: { type: String, max: 300 },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     uploadDate: { type: Date, default: Date.now() },
     viewCount: { type: Number, default: 0 },

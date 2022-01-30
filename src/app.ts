@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import cloudinary from 'cloudinary';
 
 // routers
 import userRouter from './routes/userRouter';
