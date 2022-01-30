@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { fsync } from 'fs';
 import Image from '../models/Image';
-import User from '../models/User';
 import * as fs from 'fs';
 
 export async function uploadImage(
