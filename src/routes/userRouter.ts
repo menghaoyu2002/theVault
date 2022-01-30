@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as UserController from '../controllers/UserController';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ router.post(
     '/signup',
     body('email').isEmail().normalizeEmail(),
     body('password').isLength({ min: 6 }),
-    body('username').isLength({ min: 2, max: 32 }),
+    body('username').isLength({ min: 2, max: 32 }).escape(),
     UserController.createNewUser
 );
 

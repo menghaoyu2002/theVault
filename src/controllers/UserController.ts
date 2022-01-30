@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
+import { IImage } from '../models/Image';
+import { Error } from 'mongoose';
 
 // Create A New User and store it in the database
 export async function createNewUser(
@@ -40,6 +42,9 @@ export async function createNewUser(
         await newUser.save();
         return res.sendStatus(201);
     } catch (err: any) {
+        if (err.name === 'ValidationError') {
+            res.status(400);
+        }
         next(err);
     }
 }

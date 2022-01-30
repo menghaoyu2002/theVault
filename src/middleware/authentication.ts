@@ -11,7 +11,10 @@ export async function authenticateToken(
         const token =
             req.headers.authorization &&
             req.headers.authorization.split(' ')[1];
-        if (!token) return res.sendStatus(401);
+
+        if (!token) {
+            return res.sendStatus(401);
+        }
 
         const { id } = jwt.verify(
             token,
@@ -22,7 +25,6 @@ export async function authenticateToken(
         if (!user) {
             return res.sendStatus(403);
         }
-        console.log(user);
         req.body.user = user;
         next();
     } catch (err) {

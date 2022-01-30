@@ -19,6 +19,7 @@ router.post(
     body('title').isLength({ min: 1, max: 32 }),
     body('description').isLength({ max: 300 }),
     upload.single('image'),
+    authenticateToken, // we need to call authenticate token again because multer overrides req.body for some reason, so we need to restore the user property
     imageErrorHandler.handleMulterErrors,
     imageController.uploadImage
 );
