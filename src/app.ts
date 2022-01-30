@@ -33,7 +33,7 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     try {
         res.status(500);
     } finally {
-        res.json({ type: err.name, message: err.message });
+        return res.json({ type: err.name, message: err.message });
     }
 });
 
