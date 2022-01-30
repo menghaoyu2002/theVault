@@ -4,7 +4,7 @@ import { authorizeImageAuthor } from '../middleware/authorization';
 import * as imageController from '../controllers/ImageController';
 import * as imageErrorHandler from '../middleware/imageErrorHandler';
 import { upload } from '../config/multer';
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import path from 'path';
 
 const router = express.Router();
