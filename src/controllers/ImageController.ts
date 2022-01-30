@@ -12,7 +12,7 @@ export async function uploadImage(
     try {
         const image = new Image({
             title: req.body.title,
-            description: req.body.description,
+            description: req.body.description || '',
         });
 
         image.source = req.file!.filename;
