@@ -4,9 +4,11 @@
     "description": "An NFT storing service.",
     "main": "app.js",
     "scripts": {
+        "tsc": "tsc",
         "build": "tsc --build",
         "clean": "tsc --build --clean",
-        "start": "npm run build && node dist/app.js",
+        "start": "node dist/app.js",
+        "postinstall": "npm  run build",
         "dev": "nodemon src/app.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
