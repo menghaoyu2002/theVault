@@ -4,6 +4,7 @@
     "description": "An NFT storing service.",
     "main": "app.js",
     "scripts": {
+        "tsc": "tsc",
         "build": "tsc --build",
         "clean": "tsc --build --clean",
         "start": "npm run build && node dist/app.js",
