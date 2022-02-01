@@ -30,7 +30,7 @@ export async function uploadImage(
         });
 
         const image = new Image({
-            _id: uploadedImage.public_id,
+            public_id: uploadedImage.public_id,
             title: req.body.title,
             description: req.body.description || '',
         });
