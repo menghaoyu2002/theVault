@@ -6,7 +6,7 @@ export function handleMulterErrors(
     res: Response,
     next: NextFunction
 ) {
-    if (err) {
+    if (err || !req.file?.buffer) {
         return res.status(400).json({ type: err.name, message: err.message });
     }
     next();

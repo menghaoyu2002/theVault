@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import * as cloudinary from 'cloudinary';
 
 // routers
 import userRouter from './routes/userRouter';
@@ -23,6 +24,14 @@ mongoose
     .connect(process.env.MONGO_URI!)
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
+
+// set up cloudinary for image uploading
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    secure: true,
+});
 
 // API routes
 app.use('/api/', userRouter);

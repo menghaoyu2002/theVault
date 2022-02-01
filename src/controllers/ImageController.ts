@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import Image, { IImage } from '../models/Image';
-import * as fs from 'fs';
 import { Types } from 'mongoose';
+import DataURIParser from 'datauri/parser';
+import path from 'path';
+import cloudinary from 'cloudinary';
+
+const parser = new DataURIParser();
 
 export async function uploadImage(
     req: Request,
@@ -9,22 +13,37 @@ export async function uploadImage(
     next: NextFunction
 ) {
     try {
+        const file = parser.format(
+            path.extname(req.file!.originalname),
+            req.file!.buffer
+        ).content;
+
+        if (!file) {
+            return res.status(400).json({
+                message: 'image could not be parsed and converted correctly',
+            });
+        }
+
+        const uploadedImage = await cloudinary.v2.uploader.upload(file, {
+            public_id: Date.now().toString(),
+            unique_filename: true,
+        });
+
         const image = new Image({
+            _id: uploadedImage.public_id,
             title: req.body.title,
             description: req.body.description || '',
         });
 
-        image.source = req.file!.filename;
+        image.source = uploadedImage.url;
         image.author = req.body.user;
 
         req.body.user.uploadedImages.push(image);
 
         await image.save();
         await req.body.user.save();
-
         return res.sendStatus(201);
     } catch (err) {
-        fs.rmSync(req.file!.path); // if an error occurs, make sure to delete the uploaded file
         next(err);
     }
 }
@@ -37,6 +56,8 @@ export async function deleteImage(
     try {
         const user = req.body.user;
 
+        await cloudinary.v2.uploader.destroy(req.body.image.public_id);
+
         // remove the image from the user's uploaded images
         user.uploadedImages = user.uploadedImages.filter(
             (image: IImage & { _id: Types.ObjectId }) =>
@@ -44,11 +65,10 @@ export async function deleteImage(
         );
 
         // then delete the image
-        req.body.image.delete();
+        await req.body.image.delete();
 
         await user.save();
 
-        fs.rmSync(__dirname + '/../public/images/' + req.body.image.source); // delete the file on the filesystem as well
         return res.sendStatus(200);
     } catch (err) {
         next(err);

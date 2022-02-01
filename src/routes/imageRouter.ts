@@ -3,23 +3,18 @@ import { authenticateToken } from '../middleware/authentication';
 import { authorizeImageAuthor } from '../middleware/authorization';
 import * as imageController from '../controllers/ImageController';
 import * as imageErrorHandler from '../middleware/imageErrorHandler';
-import { upload } from '../config/multer';
-import { body, param } from 'express-validator';
-import path from 'path';
+import { upload } from '../middleware/multer';
+import { body } from 'express-validator';
 
 const router = express.Router();
-
-// serve static images
-router.use('/', express.static(path.join(__dirname, '../public/images')));
 
 // upload an image from the current User
 router.post(
     '/upload',
-    authenticateToken,
     body('title').isLength({ min: 1, max: 32 }),
     body('description').isLength({ max: 300 }),
     upload.single('image'),
-    authenticateToken, // we need to call authenticate token again because multer overrides req.body for some reason, so we need to restore the user property
+    authenticateToken,
     imageErrorHandler.handleMulterErrors,
     imageController.uploadImage
 );

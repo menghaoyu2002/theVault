@@ -3,6 +3,7 @@ import { IUser } from './User';
 
 export interface IImage {
     source: string;
+    public_id: string;
     title: string;
     description: string;
     author: IUser;
@@ -14,6 +15,7 @@ export interface IImage {
 
 export const ImageSchema = new Schema<IImage>({
     source: { type: String, required: true },
+    public_id: { type: String, required: true },
     title: { type: String, required: true, max: 32 },
     description: { type: String, max: 300 },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
