@@ -3,11 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import * as cloudinary from 'cloudinary';
+import cloudinary from 'cloudinary';
 
 // routers
 import userRouter from './routes/userRouter';
 import imageRouter from './routes/imageRouter';
+import cookieParser from 'cookie-parser';
 
 // configure environment variables
 dotenv.config();
@@ -17,6 +18,7 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 // setup mongodb database
@@ -34,7 +36,7 @@ cloudinary.v2.config({
 });
 
 // API routes
-app.use('/api/', userRouter);
+app.use('/api', userRouter);
 app.use('/api/images', imageRouter);
 
 // standard error handler

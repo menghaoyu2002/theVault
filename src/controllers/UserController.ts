@@ -3,8 +3,27 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { IImage } from '../models/Image';
-import { Error } from 'mongoose';
+
+export async function getUserDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const user = await User.findById(req.params.userID);
+        if (!user) {
+            return res.sendStatus(404);
+        }
+
+        return res.status(200).json({
+            id: user._id,
+            username: user.username,
+            images: user.uploadedImages,
+        });
+    } catch (err) {
+        next(err);
+    }
+}
 
 // Create A New User and store it in the database
 export async function createNewUser(
@@ -72,7 +91,20 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             process.env.TOKEN_SECRET!,
             { expiresIn: '24h' }
         );
-        return res.status(200).json({ token });
+        return res
+            .cookie('access_token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+            })
+            .sendStatus(200);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export function logout(req: Request, res: Response, next: NextFunction) {
+    try {
+        return res.clearCookie('access_token').sendStatus(200);
     } catch (err) {
         next(err);
     }
