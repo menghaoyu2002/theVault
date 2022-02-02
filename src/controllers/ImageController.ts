@@ -7,6 +7,31 @@ import cloudinary from 'cloudinary';
 
 const parser = new DataURIParser();
 
+export async function fetchImages(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        if (!req.query.limit || !req.query.page) {
+            return res.status(400).json({
+                message: 'Query Parameters "limit" and "page" are required',
+            });
+        }
+
+        const limit = parseInt(req.query.limit as string);
+        const page = parseInt(req.query.page as string);
+
+        const images = await Image.find()
+            .skip(limit * (page - 1))
+            .limit(limit)
+            .populate({ path: 'author', select: 'username' });
+        return res.status(200).json(images);
+    } catch (err) {
+        next(err);
+    }
+}
+
 export async function uploadImage(
     req: Request,
     res: Response,

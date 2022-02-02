@@ -8,6 +8,12 @@ import { body } from 'express-validator';
 
 const router = express.Router();
 
+/**
+ * Get images from the server with the given query parameters
+ * @route /api/images
+ */
+router.get('', imageController.fetchImages);
+
 // upload an image from the current User
 router.post(
     '/upload',
