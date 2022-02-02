@@ -1,4 +1,6 @@
-# The Vault
+# The Vault 
+[![Node.js CI](https://github.com/menghaoyu2002/theVault/actions/workflows/node.js.yml/badge.svg)](https://github.com/menghaoyu2002/theVault/actions/workflows/node.js.yml)
+
 An NFT storing service. Maybe an NFT Musuem.
 
 Honestly, I'm just learning to store some files and pixels in the backend.
