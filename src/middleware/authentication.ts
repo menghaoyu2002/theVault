@@ -11,7 +11,7 @@ export async function authenticateToken(
         const token = req.cookies.access_token;
 
         if (!token) {
-            return res.sendStatus(403);
+            return res.sendStatus(401);
         }
 
         const { id } = jwt.verify(

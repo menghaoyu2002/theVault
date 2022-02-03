@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as userController from '../controllers/UserController';
+import { authenticateToken } from '../middleware/authentication';
 import { body } from 'express-validator';
 
 const router = Router();
@@ -20,5 +21,8 @@ router.post('/login', userController.login);
 
 // Log the user out
 router.post('/logout', userController.logout);
+
+// check if the current user is logged in and authenticated
+router.get('/checkauth', authenticateToken, userController.checkAuthentication);
 
 export default router;

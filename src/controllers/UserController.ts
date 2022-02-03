@@ -109,3 +109,11 @@ export function logout(req: Request, res: Response, next: NextFunction) {
         next(err);
     }
 }
+
+export function checkAuthentication(req: Request, res: Response) {
+    if (req.body.user) {
+        return res.sendStatus(200);
+    } else {
+        return res.sendStatus(401);
+    }
+}
