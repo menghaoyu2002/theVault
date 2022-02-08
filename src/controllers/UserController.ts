@@ -91,7 +91,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             process.env.TOKEN_SECRET!,
             { expiresIn: '24h' }
         );
-        return res.status(200).json(token);
+        return res.status(200).json({ access_token: token });
     } catch (err) {
         next(err);
     }
