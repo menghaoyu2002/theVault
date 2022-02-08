@@ -77,7 +77,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
                 .json({ message: 'Invalid Email or Password' });
         }
 
-        const isCorrectPassword = bcrypt.compare(
+        const isCorrectPassword = await bcrypt.compare(
             req.body.password,
             user.password
         );
