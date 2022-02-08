@@ -91,12 +91,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             process.env.TOKEN_SECRET!,
             { expiresIn: '24h' }
         );
-        return res
-            .cookie('access_token', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-            })
-            .sendStatus(200);
+        return res.status(200).json(token);
     } catch (err) {
         next(err);
     }
