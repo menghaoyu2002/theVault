@@ -25,6 +25,7 @@ export async function fetchImages(
         const images = await Image.find()
             .skip(limit * (page - 1))
             .limit(limit)
+            .sort({ likes: 1, dislikes: -1 })
             .populate({ path: 'author', select: 'username' });
         return res.status(200).json(images);
     } catch (err) {
