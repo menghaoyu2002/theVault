@@ -7,6 +7,37 @@ import cloudinary from 'cloudinary';
 
 const parser = new DataURIParser();
 
+export async function findById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const { imageid } = req.params;
+        const image = await Image.findById(imageid)
+            .populate({ path: 'author', select: 'username' })
+            .catch(() => {
+                return res
+                    .status(400)
+                    .json({
+                        type: 'InvalidIdError',
+                        message: 'Invalid image ID',
+                    });
+            });
+        if (image) {
+            return res.status(200).json(image);
+        } else {
+            return res.status(404).json({
+                type: 'ImageNotFoundError',
+                message:
+                    'Image with this id could not be found in the database',
+            });
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function fetchImages(
     req: Request,
     res: Response,

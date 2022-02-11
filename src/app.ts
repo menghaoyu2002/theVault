@@ -41,11 +41,7 @@ app.use('/api/images', imageRouter);
 
 // standard error handler
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-    try {
-        res.status(500);
-    } finally {
-        return res.json({ type: err.name, message: err.message });
-    }
+    return res.status(500).json({ type: err.name, message: err.message });
 });
 
 // listen on port

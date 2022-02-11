@@ -14,6 +14,9 @@ const router = express.Router();
  */
 router.get('', imageController.fetchImages);
 
+// find an image by its id
+router.get('/:imageid', imageController.findById);
+
 // upload an image from the current User
 router.post(
     '/upload',
