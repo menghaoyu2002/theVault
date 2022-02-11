@@ -17,11 +17,12 @@ router.get('', imageController.fetchImages);
 // upload an image from the current User
 router.post(
     '/upload',
+    upload.single('image'),
+    imageErrorHandler.handleMulterErrors,
+    authenticateToken,
     body('title').isLength({ min: 1, max: 32 }),
     body('description').isLength({ max: 300 }),
-    upload.single('image'),
-    authenticateToken,
-    imageErrorHandler.handleMulterErrors,
+    imageErrorHandler.handleValidationError,
     imageController.uploadImage
 );
 
