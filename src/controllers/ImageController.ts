@@ -17,12 +17,10 @@ export async function findById(
         const image = await Image.findById(imageid)
             .populate({ path: 'author', select: 'username' })
             .catch(() => {
-                return res
-                    .status(400)
-                    .json({
-                        type: 'InvalidIdError',
-                        message: 'Invalid image ID',
-                    });
+                return res.status(400).json({
+                    type: 'InvalidIdError',
+                    message: 'Invalid image ID',
+                });
             });
         if (image) {
             return res.status(200).json(image);
@@ -56,7 +54,7 @@ export async function fetchImages(
         const images = await Image.find()
             .skip(limit * (page - 1))
             .limit(limit)
-            .sort({ likes: 1, dislikes: -1 })
+            .sort({ viewCount: 1 })
             .populate({ path: 'author', select: 'username' });
         return res.status(200).json(images);
     } catch (err) {

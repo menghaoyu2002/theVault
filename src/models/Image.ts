@@ -9,8 +9,6 @@ export interface IImage {
     author: IUser;
     uploadDate: Date;
     viewCount: number;
-    likes: number;
-    dislikes: number;
 }
 
 export const ImageSchema = new Schema<IImage>({
@@ -21,8 +19,6 @@ export const ImageSchema = new Schema<IImage>({
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     uploadDate: { type: Date, default: Date.now() },
     viewCount: { type: Number, default: 0 },
-    likes: { type: Number, default: 0 },
-    dislikes: { type: Number, default: 0 },
 });
 
 const Image = model<IImage>('Image', ImageSchema);
