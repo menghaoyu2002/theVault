@@ -14,14 +14,10 @@ export async function findById(
 ) {
     try {
         const { imageid } = req.params;
-        const image = await Image.findById(imageid)
-            .populate({ path: 'author', select: 'username' })
-            .catch(() => {
-                return res.status(400).json({
-                    type: 'InvalidIdError',
-                    message: 'Invalid image ID',
-                });
-            });
+        const image = await Image.findById(imageid).populate({
+            path: 'author',
+            select: 'username',
+        });
         if (image) {
             return res.status(200).json(image);
         } else {
@@ -31,7 +27,12 @@ export async function findById(
                     'Image with this id could not be found in the database',
             });
         }
-    } catch (error) {
+    } catch (error: any) {
+        if (error.name === 'CastError') {
+            return res
+                .status(400)
+                .json({ type: error.name, message: error.message });
+        }
         next(error);
     }
 }
