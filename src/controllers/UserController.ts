@@ -62,7 +62,9 @@ export async function createNewUser(
         return res.sendStatus(201);
     } catch (err: any) {
         if (err.name === 'ValidationError') {
-            res.status(400);
+            return res
+                .status(400)
+                .json({ type: err.name, message: err.message });
         }
         next(err);
     }
