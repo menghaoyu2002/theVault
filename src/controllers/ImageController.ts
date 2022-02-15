@@ -98,7 +98,7 @@ export async function uploadImage(
 
         await image.save();
         await req.body.user.save();
-        return res.sendStatus(201);
+        return res.status(201).json({imageid: image._id});
     } catch (err) {
         next(err);
     }
