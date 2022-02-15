@@ -9,7 +9,7 @@ router.get('/users/:userID', userController.getUserDetails);
 
 // Sign the user up with their given credentials
 router.post(
-    '/signup',
+    '/register',
     body('email').isEmail().normalizeEmail(),
     body('password').isLength({ min: 6 }),
     body('username').isLength({ min: 2, max: 32 }).escape(),
